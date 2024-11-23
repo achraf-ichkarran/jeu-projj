@@ -16,6 +16,7 @@ MSG0 = "\nLa commande '{command_word}' ne prend pas de paramètre.\n"
 # The MSG1 variable is used when the command takes 1 parameter.
 MSG1 = "\nLa commande '{command_word}' prend 1 seul paramètre.\n"
 
+
 class Actions:
 
     def go(game, list_of_words, number_of_parameters):
@@ -32,7 +33,7 @@ class Actions:
             bool: True if the command was executed successfully, False otherwise.
 
         Examples:
-        
+
         >>> from game import Game
         >>> game = Game()
         >>> game.setup()
@@ -44,7 +45,7 @@ class Actions:
         False
 
         """
-        
+
         player = game.player
         l = len(list_of_words)
         # If the number of parameters is incorrect, print an error message and return False.
@@ -90,7 +91,7 @@ class Actions:
             command_word = list_of_words[0]
             print(MSG0.format(command_word=command_word))
             return False
-        
+
         # Set the finished attribute of the game object to True.
         player = game.player
         msg = f"\nMerci {player.name} d'avoir joué. Au revoir.\n"
@@ -101,7 +102,7 @@ class Actions:
     def help(game, list_of_words, number_of_parameters):
         """
         Print the list of available commands.
-        
+
         Args:
             game (Game): The game object.
             list_of_words (list): The list of words in the command.
@@ -130,7 +131,7 @@ class Actions:
             command_word = list_of_words[0]
             print(MSG0.format(command_word=command_word))
             return False
-        
+
         # Print the list of available commands.
         print("\nVoici les commandes disponibles:")
         for command in game.commands.values():
