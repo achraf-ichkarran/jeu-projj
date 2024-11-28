@@ -38,24 +38,24 @@ class Game:
         self.rooms.append(cave)
         cottage = Room("Cottage", "dans un petit chalet pittoresque avec un toit de chaume. Une épaisse fumée verte sort de la cheminée.")
         self.rooms.append(cottage)
-        swamp = Room("Swamp", "dans un marécage sombre et ténébreux. L'eau bouillonne, les abords sont vaseux.")
-        self.rooms.append(swamp)
+        depart = Room("depart", "dans un marécage sombre et ténébreux. L'eau bouillonne, les abords sont vaseux.")
+        self.rooms.append(depart)
         castle = Room("Castle", "dans un énorme château fort avec des douves et un pont levis. Sur les tours, des flèches en or massif.")
         self.rooms.append(castle)
 
         # Create exits for rooms
 
-        forest.exits = {"N" : cave, "E" : None, "S" : castle, "O" : None}
-        tower.exits = {"N" : cottage, "E" : None, "S" : None, "O" : None}
-        cave.exits = {"N" : None, "E" : cottage, "S" : forest, "O" : None}
-        cottage.exits = {"N" : None, "E" : None, "S" : tower, "O" : cave}
-        swamp.exits = {"N" : tower, "E" : None, "S" : None, "O" : castle}
-        castle.exits = {"N" : forest, "E" : swamp, "S" : None, "O" : None}
+        forest.exits = {"N" : cave, "E" : None, "S" : castle, "O" : None,"H":None,"D":None}
+        tower.exits = {"N" : cottage, "E" : None, "S" : None, "O" : None,"H":None,"D":None}
+        cave.exits = {"N" : None, "E" : cottage, "S" : forest, "O" : None,"H":None,"D":None}
+        cottage.exits = {"N" : None, "E" : None, "S" : tower, "O" : cave,"H":None,"D":None}
+        depart.exits = {"N" : tower, "E" : None, "S" : None, "O" : castle,"H":None,"D":None}
+        castle.exits = {"N" : forest, "E" : depart, "S" : None, "O" : None,"H":None,"D":None}
 
         # Setup player and starting room
 
         self.player = Player(input("\nEntrez votre nom: "))
-        self.player.current_room = swamp
+        self.player.current_room = depart
 
     # Play the game
     def play(self):
