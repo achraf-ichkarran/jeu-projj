@@ -6,6 +6,11 @@ from room import Room
 from player import Player
 from command import Command
 from actions import Actions
+from directions import (DIRECTIONS,centralise_direction)
+   
+
+def standardize_direction(input_direction):
+    return DIRECTIONS.get(input_direction, None)
 
 class Game:
 
@@ -18,6 +23,7 @@ class Game:
     
     # Setup the game
     def setup(self):
+        
 
         # Setup commands
 
@@ -49,7 +55,7 @@ class Game:
         tower.exits = {"N" : cottage, "E" : None, "S" : None, "O" : None,"H":None,"D":None}
         cave.exits = {"N" : None, "E" : cottage, "S" : forest, "O" : None,"H":None,"D":None}
         cottage.exits = {"N" : None, "E" : None, "S" : tower, "O" : cave,"H":None,"D":None}
-        depart.exits = {"N" : tower, "E" : None, "S" : None, "O" : castle,"H":None,"D":None}
+        depart.exits = { "N": tower,  "E" : None, "S": None, "O"  : castle,"H":None,"D":None}
         castle.exits = {"N" : forest, "E" : depart, "S" : None, "O" : None,"H":None,"D":None}
 
         # Setup player and starting room
@@ -69,14 +75,24 @@ class Game:
 
     # Process the command entered by the player
     def process_command(self, command_string) -> None:
+            
+                
 
         # Split the command string into a list of words
         list_of_words = command_string.split(" ")
+        
 
         command_word = list_of_words[0]
         if command_word=="":
             return
-            
+        if command_word == "go":
+            if len(list_of_words) < 2:
+                print("Vous devez préciser une direction après 'go'.")
+                return
+            direction = standardize_direction(list_of_words[1])
+            if not direction:
+                print(f"Direction '{list_of_words[1]}' non reconnue.")
+                return
 
         # If the command is not recognized, print an error message
         if command_word not in self.commands.keys():

@@ -15,51 +15,52 @@
 MSG0 = "\nLa commande '{command_word}' ne prend pas de paramètre.\n"
 # The MSG1 variable is used when the command takes 1 parameter.
 MSG1 = "\nLa commande '{command_word}' prend 1 seul paramètre.\n"
-
+from directions import centralise_direction
 
 class Actions:
-
     def go(game, list_of_words, number_of_parameters):
         """
-        Move the player in the direction specified by the parameter.
-        The parameter must be a cardinal direction (N, E, S, O).
+        Déplace le joueur dans la direction spécifiée.
+        La direction peut être une direction cardinale ou une variante (ex: 'est').
 
         Args:
-            game (Game): The game object.
-            list_of_words (list): The list of words in the command.
-            number_of_parameters (int): The number of parameters expected by the command.
+            game (Game): L'objet du jeu.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
 
         Returns:
-            bool: True if the command was executed successfully, False otherwise.
-
-        Examples:
-
-        >>> from game import Game
-        >>> game = Game()
-        >>> game.setup()
-        >>> go(game, ["go", "N"], 1)
-        True
-        >>> go(game, ["go", "N", "E"], 1)
-        False
-        >>> go(game, ["go"], 1)
-        False
-
+            bool: True si la commande est exécutée avec succès, False sinon.
         """
-
-        player = game.player
+        # Vérifie que le bon nombre de paramètres est fourni
         l = len(list_of_words)
-        # If the number of parameters is incorrect, print an error message and return False.
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
             print(MSG1.format(command_word=command_word))
             return False
 
-        # Get the direction from the list of words.
-        direction = list_of_words[1]
-        # Move the player in the direction specified by the parameter.
-        player.move(direction)
+        # Récupère la direction et la standardise
+        input_direction = list_of_words[1]
+        direction = centralise_direction(input_direction)
+
+        if not direction:
+            print(f"Direction '{input_direction}' inconnue.")
+            return False
+
+        # Vérifie si une sortie existe dans cette direction
+        player = game.player
+        current_room = player.current_room
+
+        if direction not in current_room.exits or current_room.exits[direction] is None:
+            print("Vous ne pouvez pas aller dans cette direction.")
+            return False
+
+        # Déplace le joueur vers la pièce correspondante
+        player.current_room = current_room.exits[direction]
+        print(player.current_room.get_long_description())
         return True
 
+   
+        
     def quit(game, list_of_words, number_of_parameters):
         """
         Quit the game.
