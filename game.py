@@ -51,75 +51,44 @@ class Game:
         lampe=Item("lampe","une lampe qui fait de la lumiere","1")
         
         # Setup rooms
-        class Room:
-    def __init__(self, name, description, quest, number):
-        self.name = name
-        self.description = description
-        self.quest = quest
-        self.number = number
-        self.exits = {}
-corridor_infini = Room(
+self.corridor_infini = Room(
     "Corridor Infini",
     "Un couloir interminable avec des néons grésillants et un sol carrelé beige.",
-    "Résolvez un puzzle de répétition pour obtenir le chiffre 1.",
-    1
 )
 self.rooms.append(corridor_infini)
 bureau_abandonne = Room(
     "Bureau Abandonné",
     "Un espace de bureaux désordonné où des téléphones sonnent sporadiquement.",
-    "Trouvez des indices dans le chaos pour révéler le chiffre 2.",
-    2
 )
 self.rooms.append(bureau_abandonne)
 souterrain_inonde = Room(
     "Souterrain Inondé",
     "Une pièce immergée avec des conduites rouillées et des reflets inquiétants.",
-    "Naviguez prudemment pour découvrir le chiffre 3.",
-    3
 )
 self.rooms.append(souterrain_inonde)
 chambre_rouge = Room(
     "Chambre Rouge",
     "Une pièce rouge oppressante avec des symboles cryptiques sur les murs.",
-    "Déchiffrez les symboles pour obtenir le chiffre 4.",
-    4
 )
 self.rooms.append(chambre_rouge)
 labyrinthe_de_portes = Room(
     "Labyrinthe de Portes",
     "Un labyrinthe avec des portes qui mènent à différents endroits.",
-    "Trouvez la bonne séquence pour récupérer le chiffre 5.",
-    5
 )
 self.rooms.append(labyrinthe_de_portes)
 chambre_du_gardien = Room(
     "Chambre du Gardien",
     "Une grande salle avec un trône au centre, occupée par un boss imposant.",
-    "Affrontez le boss pour obtenir le chiffre 6.",
-    6
 )
 self.rooms.append(chambre_du_gardien)
-
-        # Create exits for rooms
-<<<<<<< HEAD
-
-        forest.exits = {"N" : cave, "E" : None, "S" : castle, "O" : None,"U":None,"D":None}
-        tower.exits = {"N" : cottage, "E" : None, "S" : None, "O" : None,"u":None,"D":None}
-        cave.exits = {"N" : None, "E" : cottage, "S" : forest, "O" : None,"U":None,"D":None}
-        cottage.exits = {"N" : None, "E" : None, "S" : tower, "O" : cave,"U":None,"D":None}
-        depart.exits = { "N": tower,  "E" : None, "S": None, "O"  : castle,"U":None,"D":None}
-        castle.exits = {"N" : forest, "E" : depart, "S" : None, "O" : None,"U":None,"D":None}
-
         # Create invontory for rooms
-        forest.inventory_rooms = set()
-        tower.inventory_rooms = set([hache])
-        cave.inventory_rooms = set()
-        cottage.inventory_rooms = set()
-        depart.inventory_rooms= set([cle,lampe])
-        castle.inventory_rooms = set()
+        corridor_infini.inventory_rooms = set()
+        bureau_abandonne.inventory_rooms = set()
+        souterrain_inonde.inventory_rooms = set()
+        chambre_rouge.inventory_rooms = set()
+        labyrinthe_de_portes.inventory_rooms= set()
+        chambre_du_gardien.inventory_rooms = set()
 
-=======
 corridor_infini.exits = {"E": bureau_abandonne}
 bureau_abandonne.exits = {"E": souterrain_inonde, "O": corridor_infini}
 souterrain_inonde.exits = {"S": chambre_rouge, "O": bureau_abandonne}
@@ -127,12 +96,11 @@ chambre_rouge.exits = {"N": souterrain_inonde, "S": labyrinthe_de_portes}
 labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": chambre_du_gardien}
 chambre_du_gardien.exits = {"O": labyrinthe_de_portes}
         
->>>>>>> 85037bcc48663a2e676de409042e51b7dd5fa615
 
         # Setup player and starting room
 
-        self.player = Player(input("\nEntrez votre nom: "))
-        self.player.current_room = depart
+        self.player = Player(input("\nEntrez votre nom: "))r
+        self.player.current_room = corridor_infini
 
     # Play the game
     def play(self):
