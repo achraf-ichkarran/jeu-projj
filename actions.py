@@ -16,6 +16,8 @@ MSG0 = "\nLa commande '{command_word}' ne prend pas de paramètre.\n"
 # The MSG1 variable is used when the command takes 1 parameter.
 MSG1 = "\nLa commande '{command_word}' prend 1 seul paramètre.\n"
 from directions import centralise_direction
+from player import Player
+from room import Room
 
 class Actions:
     def go(game, list_of_words, number_of_parameters):
@@ -48,19 +50,12 @@ class Actions:
 
         # Vérifie si une sortie existe dans cette direction
         player = game.player
-        current_room = player.current_room
-
-        if direction not in current_room.exits or current_room.exits[direction] is None:
-            print("Vous ne pouvez pas aller dans cette direction.")
-            return False
 
         # Déplace le joueur vers la pièce correspondante
-        player.current_room = current_room.exits[direction]
-        print(player.current_room.get_long_description())
+        player.move(direction)
+        #print(player.current_room.get_long_description())
         return True
 
-   
-        
     def quit(game, list_of_words, number_of_parameters):
         """
         Quit the game.
@@ -139,3 +134,57 @@ class Actions:
             print("\t- " + str(command))
         print()
         return True
+
+    def historik(game, list_of_words, number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player = game.player
+        print("\nHistorique des pièces parcourues :")
+        print(player.get_history())
+        return True
+    def back(game,list_of_words,number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player=game.player
+        game.current_room=player.history[-1]
+        print(f"vous revenez à'{game.current_room}'")
+        return True
+       
+       
+    def inventorix(game, list_of_words, number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player = game.player
+        print("\nvotre inventaire:")
+        print(player.get_inventory())
+        return True
+    def look(game, list_of_words, number_of_parameters) :
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player=game.player
+        
+        current_room=player.current_room
+        if current_room.get_inventory_rooms == set() :
+            print("il n'ya rien dans cette piece")
+            return False
+        else :
+            for i in Room.get_inventory_rooms :
+                print("\n",i)
+        return True 
+
+    
+    
+
+        

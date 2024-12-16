@@ -4,7 +4,7 @@ DIRECTIONS = {
     "E": "E", "est": "E","est":"E",
     "S": "S", "sud": "S",
     "O": "O", "ouest": "O",
-    "H": "H", "haut":"H", "Haut":"H",
-    "D": "D", "bas": "D","Bas":"B"}
+    "U": "U", "up":"U", "Up":"U",
+    "D": "D", "down": "D","Down":"D"}
 def centralise_direction(input_direction):
     return DIRECTIONS.get(input_direction, None)

@@ -7,7 +7,7 @@ from player import Player
 from command import Command
 from actions import Actions
 from directions import (DIRECTIONS,centralise_direction)
-   
+from item import Item
 
 def standardize_direction(input_direction):
     return DIRECTIONS.get(input_direction, None)
@@ -15,11 +15,13 @@ def standardize_direction(input_direction):
 class Game:
 
     # Constructor
-    def __init__(self):
+    def __init__(self):    
         self.finished = False
         self.rooms = []
         self.commands = {}
         self.player = None
+        
+        
     
     # Setup the game
     def setup(self):
@@ -33,6 +35,20 @@ class Game:
         self.commands["quit"] = quit
         go = Command("go", " <direction> : se déplacer dans une direction cardinale (N, E, S, O)", Actions.go, 1)
         self.commands["go"] = go
+        historique = Command("historique", " : afficher l'historique", Actions.historik, 0)
+        self.commands["historique"] = historique
+        back=Command("back"," : retour en arriere",Actions.back,0)
+        self.commands["back"] = back
+        inventaire=Command("inventaire"," : voir l'inventaire",Actions.inventorix,0)
+        self.commands["inventaire"] = inventaire
+        inspecter=Command("inspecter"," : inspecter la piece",Actions.look,0)
+        self.commands["inspecter"] = inspecter
+       
+       
+        # Setup items
+        hache=Item("hache","une hache qui tranche ta mere","5")
+        cle=Item("cle","une cle qui ouvre les portes","0.5")
+        lampe=Item("lampe","une lampe qui fait de la lumiere","1")
         
         # Setup rooms
 
@@ -51,12 +67,21 @@ class Game:
 
         # Create exits for rooms
 
-        forest.exits = {"N" : cave, "E" : None, "S" : castle, "O" : None,"H":None,"D":None}
-        tower.exits = {"N" : cottage, "E" : None, "S" : None, "O" : None,"H":None,"D":None}
-        cave.exits = {"N" : None, "E" : cottage, "S" : forest, "O" : None,"H":None,"D":None}
-        cottage.exits = {"N" : None, "E" : None, "S" : tower, "O" : cave,"H":None,"D":None}
-        depart.exits = { "N": tower,  "E" : None, "S": None, "O"  : castle,"H":None,"D":None}
-        castle.exits = {"N" : forest, "E" : depart, "S" : None, "O" : None,"H":None,"D":None}
+        forest.exits = {"N" : cave, "E" : None, "S" : castle, "O" : None,"U":None,"D":None}
+        tower.exits = {"N" : cottage, "E" : None, "S" : None, "O" : None,"u":None,"D":None}
+        cave.exits = {"N" : None, "E" : cottage, "S" : forest, "O" : None,"U":None,"D":None}
+        cottage.exits = {"N" : None, "E" : None, "S" : tower, "O" : cave,"U":None,"D":None}
+        depart.exits = { "N": tower,  "E" : None, "S": None, "O"  : castle,"U":None,"D":None}
+        castle.exits = {"N" : forest, "E" : depart, "S" : None, "O" : None,"U":None,"D":None}
+
+        # Create invontory for rooms
+        forest.inventory_rooms = set()
+        tower.inventory_rooms = set([hache])
+        cave.inventory_rooms = set()
+        cottage.inventory_rooms = set()
+        depart.inventory_rooms= set([cle,lampe])
+        castle.inventory_rooms = set()
+
 
         # Setup player and starting room
 
@@ -107,7 +132,6 @@ class Game:
     def print_welcome(self):
         print(f"\nBienvenue {self.player.name} dans ce jeu d'aventure !")
         print("Entrez 'help' si vous avez besoin d'aide.")
-        #
         print(self.player.current_room.get_long_description())
     # test
 
