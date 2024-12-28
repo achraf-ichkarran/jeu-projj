@@ -24,7 +24,15 @@ class Game:
         
     
     # Setup the game
-    def setup(self):
+    def setup(self,name,Character):
+        self.name=name
+        self.Character=Character
+    def __str__(self):
+        return f"{self.name}: {self.charcater}"
+    
+    def to_dict(self):
+        return {self.name: [self.charcater]}
+  
         
 
         # Setup commands
