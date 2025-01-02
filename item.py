@@ -4,7 +4,7 @@ class Item :
         self.description=description
         self.weight=weight
     def __str__(self):
-        return f"{self.name}: {self.description} (Weight: {self.weight})"
+        return f"{self.name}: {self.description} (Weight: {self.weight} kg)"
     
     def to_dict(self):
         return {self.name: [self.description, self.weight]}

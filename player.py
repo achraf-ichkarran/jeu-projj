@@ -45,6 +45,6 @@ class Player:
     def get_inventory(self):
         if not self.inventory :
             return "votre inventaire est vide"
-        return "\n->" .join(self.inventory)
+        return "\n->".join([str(item) for item in self.inventory.keys()])
         
 

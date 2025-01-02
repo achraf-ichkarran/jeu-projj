@@ -31,6 +31,6 @@ class Room:
     def get_long_description(self):
         return f"\nVous êtes {self.description}\n\n{self.get_exit_string()}\n"
     def get_inventory_rooms(self):
-        if not self.inventory:
-            return "votre inventaire est vide"
-        return "\n->" .join(self.inventory)
+        if not self.inventory_rooms:
+            return "piece vide"
+        return "\n->" .join(str(item) for item in self.inventory_rooms)

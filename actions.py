@@ -174,15 +174,50 @@ class Actions:
             print(MSG0.format(command_word=command_word))
             return False
         player=game.player
-        
-        current_room=player.current_room
-        if current_room.get_inventory_rooms == set() :
-            print("il n'ya rien dans cette piece")
-            return False
-        else :
-            for i in Room.get_inventory_rooms :
-                print("\n",i)
+        print("\nobjet disponibles:")
+        print(game.player.current_room.get_inventory_rooms())
         return True 
+    def take(game, list_of_words, number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player=game.player
+        inventaire=game.player.inventory
+        inventaire_room=game.player.current_room.inventory_rooms
+        item_to_take = list_of_words[1]
+        if inventaire_room == set() :
+            print("piece est vide")
+            return False
+        
+        for item in inventaire_room.copy():
+            if item.name == item_to_take:
+                inventaire[item] = inventaire.get(item, 0) + 1
+                inventaire_room.remove(item)
+                print(f"{item.name} a été ajouté à votre inventaire.")
+        return  True
+    def drop(game, list_of_words, number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player=game.player
+        inventaire=game.player.inventory
+        inventaire_room=game.player.current_room.inventory_rooms
+        item_to_drop = list_of_words[1]
+        if not inventaire :
+            print("inventaire vide")
+            return False
+        
+        for item in inventaire.copy():
+            if item.name == item_to_drop:
+                inventaire_room.add(item) 
+                inventaire.pop(item)
+                print(f"{item.name} a été depose dans {game.player.current_room.name}.")
+        return  True
+    
 
     
     
