@@ -122,14 +122,14 @@ class Actions:
 
         """
 
-        # If the number of parameters is incorrect, print an error message and return False.
+        # Si le nombre de paramètres est incorrect, afficher un message d'erreur et retourner False.
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
             print(MSG0.format(command_word=command_word))
             return False
 
-        # Print the list of available commands.
+        # Afficher la liste des commandes disponibles.
         print("\nVoici les commandes disponibles:")
         for command in game.commands.values():
             print("\t- " + str(command))
@@ -137,62 +137,83 @@ class Actions:
         return True
 
     def historik(game, list_of_words, number_of_parameters):
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+         # Récupère le joueur actuel
         player = game.player
+         # Affiche l'historique des pièces visitées
         print("\nHistorique des pièces parcourues :")
         print(player.get_history())
         return True
     def back(game,list_of_words,number_of_parameters):
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère le joueur actuel et met à jour la pièce actuelle avec la dernière pièce visitée
         player=game.player
         game.current_room=player.history[-1]
+         # Affiche la pièce à laquelle le joueur revient
         print(f"vous revenez à'{game.current_room}'")
         return True
        
        
     def inventorix(game, list_of_words, number_of_parameters):
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère et affiche l'inventaire du joueur
         player = game.player
         print("\nvotre inventaire:")
         print(player.get_inventory())
         return True
     def look(game, list_of_words, number_of_parameters) :
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+             # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
         player=game.player
-        
+        # Affiche l'inventaire des objets présents dans la pièce actuelle 
         print(game.player.current_room.get_inventory())
-       
         return True 
     def take(game, list_of_words, number_of_parameters):
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+             # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère les inventaires du joueur et de la pièce
         player=game.player
         inventaire=game.player.inventory
         inventaire_room=game.player.current_room.inventory_rooms
+         # Récupère l'objet que le joueur veut prendre
         item_to_take = list_of_words[1]
         if inventaire_room == set() :
+             # Si la pièce est vide, affiche un message
             print("piece est vide")
             return False
-        
+         # Parcourt les objets dans la pièce et ajoute l'objet à l'inventaire si trouvé
         for item in inventaire_room.copy():
             if item.name == item_to_take:
                 inventaire[item] = inventaire.get(item, 0) + 1
@@ -200,19 +221,25 @@ class Actions:
                 print(f"{item.name} a été ajouté à votre inventaire.")
         return  True
     def drop(game, list_of_words, number_of_parameters):
+         # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère les inventaires du joueur et de la pièce
         player=game.player
         inventaire=game.player.inventory
         inventaire_room=game.player.current_room.inventory_rooms
+        # Récupère l'objet que le joueur veut déposer
         item_to_drop = list_of_words[1]
         if not inventaire :
+            # Si l'inventaire du joueur est vide, affiche un message
             print("inventaire vide")
             return False
-        
+        # Parcourt les objets dans l'inventaire et dépose l'objet dans la pièce si trouvé
         for item in inventaire.copy():
             if item.name == item_to_drop:
                 inventaire_room.add(item) 
@@ -220,13 +247,17 @@ class Actions:
                 print(f"{item.name} a été depose dans {game.player.current_room.name}.")
         return  True
     def talk(game, list_of_words, number_of_parameters):
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG1.format(command_word=command_word))
             return False
         player = game.player
+        # Récupère le nom du personnage avec lequel le joueur veut parler
         character=list_of_words[1]
+        # (Interaction avec le personnage à implémenter)
         return True
 
     
