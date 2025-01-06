@@ -18,6 +18,7 @@ MSG1 = "\nLa commande '{command_word}' prend 1 seul paramètre.\n"
 from directions import centralise_direction
 from player import Player
 from room import Room
+from character import Character
 
 class Actions:
     def go(game, list_of_words, number_of_parameters):
@@ -174,8 +175,9 @@ class Actions:
             print(MSG0.format(command_word=command_word))
             return False
         player=game.player
-        print("\nobjet disponibles:")
-        print(game.player.current_room.get_inventory_rooms())
+        
+        print(game.player.current_room.get_inventory())
+       
         return True 
     def take(game, list_of_words, number_of_parameters):
         l = len(list_of_words)
@@ -217,6 +219,16 @@ class Actions:
                 inventaire.pop(item)
                 print(f"{item.name} a été depose dans {game.player.current_room.name}.")
         return  True
+    def talk(game, list_of_words, number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG1.format(command_word=command_word))
+            return False
+        player = game.player
+        character=list_of_words[1]
+        return True
+
     
 
     

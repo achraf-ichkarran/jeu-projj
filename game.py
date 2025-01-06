@@ -2,7 +2,7 @@
 
 # Import modules
 
-
+from character import Character
 from room import Room
 from player import Player
 from command import Command
@@ -62,6 +62,8 @@ class Game:
         cle=Item("cle","une cle qui ouvre les portes","0.5")
         lampe=Item("lampe","une lampe qui fait de la lumiere","1")
         
+        
+
         # Setup rooms
 
 
@@ -86,6 +88,7 @@ class Game:
         bureau_abandonne.inventory_rooms.add(hache)
         souterrain_inonde.inventory_rooms.add(hache)
         
+        gandalf=Character("Gandalf", "un magicien blanc", corridor_infini, ["Abracadabra !","wsh mon gars","t'a du shit ?"])
         
         corridor_infini.exits = {"E": bureau_abandonne}
         bureau_abandonne.exits = {"E": souterrain_inonde, "O": corridor_infini}
@@ -93,6 +96,12 @@ class Game:
         chambre_rouge.exits = {"N": souterrain_inonde, "S": labyrinthe_de_portes}
         labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": chambre_du_gardien}
         chambre_du_gardien.exits = {"O": labyrinthe_de_portes}
+
+        # Ajout de personnages aux salles
+        corridor_infini.character_rooms["Gandalf"] = gandalf
+
+        
+
 
 
 
@@ -114,7 +123,10 @@ class Game:
         self.print_welcome()
         # Loop until the game is finished
         while not self.finished:
-            # Get the command from the player
+            for room in self.rooms:
+                for character in room.character_rooms.values():
+                    character.move()
+            # Get the command from the player 
             self.process_command(input("> "))
         return None
 

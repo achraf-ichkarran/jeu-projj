@@ -1,29 +1,44 @@
-
-
+import random
+from config import DEBUG
+from room import Room
 class Character:
     def __init__(self,name,description,current_room,msgs) :
         self.name=name
         self.description=description
         self.current_room=current_room
         self.msgs=msgs
-    def __str(self):
+    def __str__(self):
         return f"{self.name}: {self.description} (msgs: {self.msgs})"
     def to_dict(self):
         return {self.name: [self.description, self.msgs]}
-from room import Room
-corridor_infini = Room(
-    "Corridor Infini",
-    "Un couloir interminable avec des néons grésillants et un sol carrelé beige.")
-Léo = Character("Léo", "le Vagabond mystérieux",corridor_infini , ["Je suis Léo ","Welcome to the backrooms where there is no begining ot ending !"])
-chambre_rouge = Room(
-    "Chambre Rouge",
-    "Une pièce rouge oppressante avec des symboles cryptiques sur les murs.")
-Sylvia = Character("Sylvia ", "la Mystique énigmatique", chambre_rouge, [" Les murs parlent, mais seuls les esprits éveillés peuvent entendre leur secret."])
-labyrinthe_de_portes = Room(
-    "Labyrinthe de Portes",
-    "Un labyrinthe avec des portes qui mènent à différents endroits.")
-Igor = Character("Igor", "le Gardien grincheux",labyrinthe_de_portes, ["Ah, encore des visiteurs. Vous voulez sortir ? Trouvez la porte, ou restez à jamais ! "])
-chambre_du_gardien = Room(
-    "Chambre du Gardien",
-    "Une grande salle avec un trône au centre, occupée par un boss imposant.")
-Kragnra = Character("Kragnar", "le Colosse impitoyable",chambre_du_gardien, ["Vous voulez le dernier chiffre ? Alors prouvez votre valeur, faibles créatures !"])
+    def get_msg(self):
+        if not self.msgs :
+            print(f"{self.name} n'a plus de message à dire.")
+            return None
+        msg=self.msgs[0]
+        self.msgs.pop(0)
+        return "\n->".join(msg)
+        
+        
+    
+        
+    def move(self):
+        # Le personnage a une chance sur deux de se déplacer
+        if random.choice([True, False]):
+            # Choisir une pièce adjacente au hasard
+            exits = list(self.current_room.exits.values())
+            if exits:
+                new_room = random.choice(exits)
+                if DEBUG:
+                    print(f"DEBUG: {self.name} se déplace de {self.current_room.name} à {new_room.name}")
+                self.current_room = new_room
+                return True
+            else:
+                if DEBUG:
+                    print(f"DEBUG: {self.name} ne peut pas se déplacer, aucune sortie.")
+        else:
+            if DEBUG:
+                print(f"DEBUG: {self.name} reste dans {self.current_room.name}")
+        return False
+
+
