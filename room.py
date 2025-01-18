@@ -77,30 +77,30 @@ class Room:
             str: Une chaîne de caractères contenant la description détaillée de l'objet.
         """
         return f"\nVous êtes {self.description}\n\n{self.get_exit_string()}\n"
+
     def get_inventory(self):
         """
-        Récupère l'inventaire des objets ou éléments associés à l'objet.
+         Récupère l'inventaire des objets et des personnages présents dans la pièce.
 
-        Cette méthode retourne une liste ou une autre structure représentant les éléments
-        actuellement présents dans l'inventaire. Cela peut inclure des objets, des ressources
-        ou toute autre forme de stockage d'items selon l'application.
-
-        Args:
-            None
-
-        Returns:
-            list: Une liste contenant les éléments de l'inventaire, où chaque élément
-                peut être un objet, une chaîne de caractères, ou un autre type de donnée.
+         Returns:
+             str: Une description complète des objets et personnages présents dans la salle,
+                 ou un message indiquant que la salle est vide.
         """
-        inventory_list = "\n".join(str(item) for item in self.inventory_rooms)
-        characters_list = "\n".join(f"{details.name}: {details.description}"  for details in self.character_rooms.values())
+        resultat = []
+ 
+        # Vérifier et ajouter les objets présents
+        if self.inventory_rooms:
+             inventory_list = "\n".join(f"- {item.name}: {item.description}" for item in self.inventory_rooms)
+             resultat.append(f"Objets présents :\n{inventory_list}")
+        else:
+             resultat.append("Aucun objet présent.")
 
-        resultat=[]
-        if not self.inventory_rooms and self.character_rooms:
-            return "piece vide"
-        
-        resultat.append(f"Objets présents :\n{inventory_list}")
-        
-        resultat.append(f"Personnages présents :\n{characters_list}")
-        
-        return "\n\n".join(resultat)
+        # Vérifier et ajouter les personnages présents
+        if self.character_rooms:
+             characters_list = "\n".join(f"- {details.name}: {details.description}" for details in self.character_rooms.values())
+             resultat.append(f"Personnages présents :\n{characters_list}")
+        else:
+             resultat.append("Aucun personnage présent.")
+
+         # Joindre les résultats ou indiquer que la pièce est vide
+        return "\n\n".join(resultat) if resultat else "Pièce vide."

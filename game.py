@@ -93,13 +93,15 @@ class Game:
          self.commands["poser"] = poser
          parler=Command("parler"," : parler a un PNJ",Actions.talk,1)
          self.commands["parler"] = parler
+         attaque = Command("attaquer", " <nom_du_PNJ> : attaquer un PNJ dans la pièce", Actions.attack, 1)
+         self.commands["attaquer"] = attaque
        
         # Setup items
-         hache=Item("hache","une hache qui tranche ta mere","5")
-         cle=Item("cle","une cle qui ouvre les portes","0.5")
-         lampe=Item("lampe","une lampe qui fait de la lumiere","1")
+         indice=Item("indice","note laisser par un survivant:\n le code de la porte est le numero de bureau du meilleur prof de l'ESIEE","5")
+
         
-         porte_1=Door("bureau","1234")
+         porte_1=Door("bureau","5454")
+         porte_2=Door("bureau","5454")
 
         # Setup rooms
          corridor_infini = Room("Corridor Infini","Un couloir interminable avec des néons grésillants et un sol carrelé beige.",)
@@ -112,26 +114,41 @@ class Game:
          self.rooms.append(chambre_rouge)
          labyrinthe_de_portes = Room("Labyrinthe de Portes","Un labyrinthe avec des portes qui mènent à différents endroits.",)
          self.rooms.append(labyrinthe_de_portes)
-         chambre_du_gardien = Room("Chambre du Gardien","Une grande salle avec un trône au centre, occupée par un boss imposant.",)
+         chambre_du_gardien = Room("Chambre du Gardien","Une grande salle avec un trône au centre,.",)
          self.rooms.append(chambre_du_gardien)
+         piege= Room("piege","",)
+         self.rooms.append(piege)
+  
         
         # Create invontory for rooms
-         corridor_infini.inventory_rooms.add(hache)
-         bureau_abandonne.inventory_rooms.add(hache)
-         souterrain_inonde.inventory_rooms.add(hache)
+         corridor_infini.inventory_rooms.add(indice)
+
+        #creation de PNJ
+         vagabond=Character("vagabond", "homme perdue",bureau_abandonne , ["vous etes qui !!!","je me cache ici depuis 11 ans","vous trouverais une porte bloquer vers le sud","un indice est cachée dans le couloir j'ai trop peur d'aller le chercher"],5,can_move=False)
+         calamitee_1=Character("calamitée", "créature nauséabond",souterrain_inonde , ["aaaaggghhh"],5,can_move=False)
+         calamitee_2=Character("calamitée", "créature nauséabond",chambre_rouge , ["aaaaggghhh"],5,can_move=False)
+         calamitee_3=Character("calamitée", "créature nauséabond" ,labyrinthe_de_portes, ["aaaaggghhh"],5,can_move=True)
+         calamitee_4=Character("calamitée", "créature nauséabond",souterrain_inonde , ["aaaaggghhh"],5,can_move=True)
         
-         gandalf=Character("Gandalf", "un magicien blanc",bureau_abandonne , ["Abracadabra !","wsh mon gars","t'a du shit ?"],5,can_move=False)
-        
+        #initialisation des sorties
          corridor_infini.exits = {"E": bureau_abandonne}
          bureau_abandonne.exits = {"E": souterrain_inonde, "O": corridor_infini}
          souterrain_inonde.exits = {"S": chambre_rouge, "O": bureau_abandonne}
          chambre_rouge.exits = {"N": souterrain_inonde, "S": labyrinthe_de_portes}
-         labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": (chambre_du_gardien,porte_1)}
+         labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": (chambre_du_gardien,porte_1),"S":(piege,porte_2)}
          chambre_du_gardien.exits = {"O": labyrinthe_de_portes,}
 
         # Ajout de personnages aux salles
-         bureau_abandonne.character_rooms["Gandalf"] = gandalf
+         bureau_abandonne.character_rooms["vagabond"] = vagabond
+         souterrain_inonde.character_rooms["calamitée"] = calamitee_1
+         labyrinthe_de_portes.character_rooms["calamitée"] = calamitee_3
+         chambre_rouge.character_rooms["calamitée"] = calamitee_2
+         
+    
+    
+        #Ajout des pieces de victoire et de defaite
          self.victory_room=chambre_du_gardien
+         self.loose_room=piege
 
 
 

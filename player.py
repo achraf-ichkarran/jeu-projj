@@ -47,11 +47,8 @@ class Player:
         # test
         if self.current_room and self.current_room.name not in self.history:
             self.history.append(self.current_room.name)
-        # Set the current room to the next room.
-        #print(f"Historique mis à jour : {self.history}")
+      
         self.current_room = next_room
-        #self.history.append(self.current_room)
-        #print(self.current_room.get_long_description())
        
 
         return True 

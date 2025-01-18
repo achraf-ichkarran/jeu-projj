@@ -63,6 +63,13 @@ class Actions:
                         player.move(input_direction)  # Déplace le joueur vers la salle suivante
                         player.current_room = next_room
                         print(player.current_room.get_long_description())
+                        if player.current_room == game.victory_room:
+                           print(f"Félicitations {player.name} ! Vous avez gagné.")
+                           game.finished = True  # Fin du jeu
+                        elif player.current_room == game.loose_room:
+                           print("Vous etes mort")
+                           game.finished = True  # Fin du jeu
+                    
                     else:
                         print("Code incorrect. La porte reste verrouillée.")
                         return False
@@ -83,9 +90,7 @@ class Actions:
                 # Si la sortie n'est pas un tuple (porte, salle), déplace simplement le joueur
                 player.move(input_direction)
                 print(player.current_room.get_long_description())
-            if player.current_room == game.victory_room:
-                print(f"Félicitations {player.name} ! Vous avez gagné.")
-                game.finished = True  # Fin du jeu
+            
         else:
             print(f"Il n'y a pas de sortie dans la direction '{input_direction}'.")
             return False
@@ -109,7 +114,7 @@ class Actions:
         Exemples :
         """
 
-        """
+        
         l = len(list_of_words)
         # Si le nombre de paramètres est incorrect, afficher un message d'erreur et retourner False.
         if l != number_of_parameters + 1:
@@ -123,7 +128,7 @@ class Actions:
         print(msg)
         game.finished = True
         return True
-        """
+        
     def help(game, list_of_words, number_of_parameters):
         """
         Afficher la liste des commandes disponibles.
@@ -255,28 +260,55 @@ class Actions:
         # Affiche l'inventaire des objets présents dans la pièce actuelle 
         print(game.player.current_room.get_inventory())
         return True 
-    def attack(game, list_of_words,number_of_parameters):
-        l = len(list_of_words)
-        if l != number_of_parameters + 1:
-            command_word = list_of_words[0]
-            print(MSG0.format(command_word=command_word))
-            return False
-        player = game.player
-        current_room = player.current_room
-        character_name = list_of_words[1]
-        
-        atk = random.choice([True,False])
-        if character_name in player.current_room.character_rooms:
-            if atk==True :
-                current_room.character_rooms
+    def attack(game, list_of_words, number_of_parameters):
+         """
+        Permet au joueur d'attaquer un PNJ dans la pièce actuelle.
+
+        Args:
+            game (Game): L'instance actuelle du jeu.
+            list_of_words (list): La commande saisie par le joueur, sous forme de liste de mots.
+            number_of_parameters (int): Le nombre de paramètres attendu pour cette commande.
+
+        Returns:
+            bool: True si l'attaque a été effectuée, False sinon.
+         """
+        # Vérifier le nombre de paramètres
+         l = len(list_of_words)
+         if l != number_of_parameters + 1:
+             command_word = list_of_words[0]
+             print(f"Erreur : la commande '{command_word}' nécessite un paramètre (le nom du PNJ).")
+             return False
+
+        # Initialisation des variables
+         player = game.player
+         current_room = player.current_room
+         character_name = list_of_words[1]
+
+         # Vérifier si le PNJ est présent dans la pièce
+         if character_name in current_room.character_rooms:
+             pnj = current_room.character_rooms[character_name]
+             print(f"Vous tentez d'attaquer {pnj.name}...")
+
+          # Résultat de l'attaque
+             if random.choice([True, False]):  # Succès de l'attaque
+                 print(f"Vous avez vaincu {pnj.name} !")
+                 del current_room.character_rooms[character_name]
+             else:  # Le PNJ riposte
+                 damage = random.randint(1, 5)
+                 player.pv -= damage
+                 print(f"{pnj.name} vous a infligé {damage} points de dégâts !")
             
-            if player.pv == 1:
-                print(f"\n {player.name} vient de mourrir")
-                game.finished =True
-            else:
-                player.pv=player.pv - 1
-                game.finished = False
-                return True
+                 # Vérifier si le joueur est mort
+                 if player.pv <= 0:
+                     print(f"\n{player.name} est mort. Game Over.")
+                     game.finished = True
+                 else:
+                     print(f"Il vous reste {player.pv} points de vie.")
+         else:
+             print(f"Aucun PNJ nommé '{character_name}' n'est présent dans cette pièce.")
+             return False
+
+         return True
     
     def take(game, list_of_words, number_of_parameters):
         """
