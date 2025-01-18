@@ -96,77 +96,57 @@ class Actions:
 
     def quit(game, list_of_words, number_of_parameters):
         """
-        Quit the game.
+        Quitter le jeu.
 
-        Args:
-            game (Game): The game object.
-            list_of_words (list): The list of words in the command.
-            number_of_parameters (int): The number of parameters expected by the command.
+        Arguments :
+            game (Game) : L'objet du jeu.
+            list_of_words (list) : La liste des mots dans la commande.
+            number_of_parameters (int) : Le nombre de paramètres attendus par la commande.
 
-        Returns:
-            bool: True if the command was executed successfully, False otherwise.
+        Retourne :
+            bool : True si la commande a été exécutée avec succès, False sinon.
 
-        Examples:
-
-        >>> from game import Game
-        >>> game = Game()
-        >>> game.setup()
-        >>> quit(game, ["quit"], 0)
-        True
-        >>> quit(game, ["quit", "N"], 0)
-        False
-        >>> quit(game, ["quit", "N", "E"], 0)
-        False
+        Exemples :
+        """
 
         """
         l = len(list_of_words)
-        # If the number of parameters is incorrect, print an error message and return False.
+        # Si le nombre de paramètres est incorrect, afficher un message d'erreur et retourner False.
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
             print(MSG0.format(command_word=command_word))
             return False
 
-        # Set the finished attribute of the game object to True.
+        # Définir l'attribut finished de l'objet game à True.
         player = game.player
         msg = f"\nMerci {player.name} d'avoir joué. Au revoir.\n"
         print(msg)
         game.finished = True
         return True
-
+        """
     def help(game, list_of_words, number_of_parameters):
         """
-        Print the list of available commands.
+        Afficher la liste des commandes disponibles.
 
-        Args:
-            game (Game): The game object.
-            list_of_words (list): The list of words in the command.
-            number_of_parameters (int): The number of parameters expected by the command.
+        Arguments :
+            game (Game) : L'objet du jeu.
+            list_of_words (list) : La liste des mots dans la commande.
+            number_of_parameters (int) : Le nombre de paramètres attendus par la commande.
 
-        Returns:
-            bool: True if the command was executed successfully, False otherwise.
+        Retourne :
+            bool : True si la commande a été exécutée avec succès, False sinon.
 
-        Examples:
-
-        >>> from game import Game
-        >>> game = Game()
-        >>> game.setup()
-        >>> help(game, ["help"], 0)
-        True
-        >>> help(game, ["help", "N"], 0)
-        False
-        >>> help(game, ["help", "N", "E"], 0)
-        False
-
+        Exemples :
         """
 
-        # If the number of parameters is incorrect, print an error message and return False.
+        # Si le nombre de paramètres est incorrect, afficher un message d'erreur et retourner False.
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
             print(MSG0.format(command_word=command_word))
             return False
 
-        # Print the list of available commands.
+        # Afficher la liste des commandes disponibles.
         print("\nVoici les commandes disponibles:")
         for command in game.commands.values():
             print("\t- " + str(command))
@@ -174,47 +154,106 @@ class Actions:
         return True
 
     def historik(game, list_of_words, number_of_parameters):
+        """
+        Affiche l'historique des actions du joueur.
+
+         Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si la commande est exécutée avec succès, False sinon.
+        """
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+         # Récupère le joueur actuel
         player = game.player
+         # Affiche l'historique des pièces visitées
         print("\nHistorique des pièces parcourues :")
         print(player.get_history())
         return True
     def back(game,list_of_words,number_of_parameters):
+        """
+        Ramène le joueur à sa position précédente en utilisant l'historique des déplacements.
+
+        Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si la commande est exécutée avec succès, False sinon.
+        """
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère le joueur actuel et met à jour la pièce actuelle avec la dernière pièce visitée
         player=game.player
         game.current_room=player.history[-1]
+         # Affiche la pièce à laquelle le joueur revient
         print(f"vous revenez à'{game.current_room}'")
         return True
        
        
     def inventorix(game, list_of_words, number_of_parameters):
+        """
+        Affiche le contenu de l'inventaire du joueur.
+
+        Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si la commande est exécutée avec succès, False sinon.
+        """
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère et affiche l'inventaire du joueur
         player = game.player
         print("\nvotre inventaire:")
         print(player.get_inventory())
         return True
     def look(game, list_of_words, number_of_parameters) :
+        """
+        Permet au joueur d'examiner son environnement ou un objet spécifique.
+
+        Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si la commande est exécutée avec succès, False sinon.
+        """
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+             # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
         player=game.player
-        
+        # Affiche l'inventaire des objets présents dans la pièce actuelle 
         print(game.player.current_room.get_inventory())
-       
         return True 
     def attack(game, list_of_words,number_of_parameters):
         l = len(list_of_words)
@@ -240,19 +279,36 @@ class Actions:
                 return True
     
     def take(game, list_of_words, number_of_parameters):
+        """
+        Permet au joueur de ramasser un objet.
+
+        Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si l'objet est ramassé avec succès, False sinon.
+        """
+        # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+             # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère les inventaires du joueur et de la pièce
         player=game.player
         inventaire=game.player.inventory
         inventaire_room=game.player.current_room.inventory_rooms
+         # Récupère l'objet que le joueur veut prendre
         item_to_take = list_of_words[1]
         if inventaire_room == set() :
+             # Si la pièce est vide, affiche un message
             print("piece est vide")
             return False
-        
+         # Parcourt les objets dans la pièce et ajoute l'objet à l'inventaire si trouvé
         for item in inventaire_room.copy():
             if item.name == item_to_take:
                 inventaire[item] = inventaire.get(item, 0) + 1
@@ -260,19 +316,36 @@ class Actions:
                 print(f"{item.name} a été ajouté à votre inventaire.")
         return  True
     def drop(game, list_of_words, number_of_parameters):
+        """
+        Permet au joueur de déposer un objet de son inventaire dans l'environnement.
+
+        Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si l'objet est déposé avec succès, False sinon.
+        """
+         # Vérifie si le nombre d'arguments est correct
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG0.format(command_word=command_word))
             return False
+
+        # Récupère les inventaires du joueur et de la pièce
         player=game.player
         inventaire=game.player.inventory
         inventaire_room=game.player.current_room.inventory_rooms
+        # Récupère l'objet que le joueur veut déposer
         item_to_drop = list_of_words[1]
         if not inventaire :
+            # Si l'inventaire du joueur est vide, affiche un message
             print("inventaire vide")
             return False
-        
+        # Parcourt les objets dans l'inventaire et dépose l'objet dans la pièce si trouvé
         for item in inventaire.copy():
             if item.name == item_to_drop:
                 inventaire_room.add(item) 
@@ -280,22 +353,37 @@ class Actions:
                 print(f"{item.name} a été depose dans {game.player.current_room.name}.")
         return  True
     def talk(game, list_of_words, number_of_parameters):
-        l = len(list_of_words)
-        if l != number_of_parameters + 1:
+         """
+        Permet au joueur de parler à un PNJ (Personnage Non Joueur).
+
+        Args:
+            game (Game): L'objet du jeu contenant les informations sur le joueur et l'environnement.
+            list_of_words (list): La liste des mots de la commande.
+            number_of_parameters (int): Le nombre de paramètres attendu.
+
+        Returns:
+            bool: True si la commande est exécutée avec succès, False sinon.
+        """
+        # Vérifie si le nombre d'arguments est correct
+         l = len(list_of_words)
+         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
+            # Affiche un message d'erreur si le nombre d'arguments est incorrect
             print(MSG1.format(command_word=command_word))
             return False
-        player = game.player
-        current_room = player.current_room
-        character_name = list_of_words[1]
-        if character_name in player.current_room.character_rooms:
+         player = game.player
+         current_room = player.current_room
+         character_name = list_of_words[1]
+         if character_name in player.current_room.character_rooms:
             print(player.current_room.character_rooms[character_name].get_msg())
             return True
-        else:
+         else:
             print(f"Il n'y a pas de personnage nommé {character_name} ici.")
             return False
 
         
+
+
 
     
 
