@@ -34,14 +34,13 @@ class Room:
     def get_inventory(self):
         inventory_list = "\n".join(str(item) for item in self.inventory_rooms)
         characters_list = "\n".join(f"{details.name}: {details.description}"  for details in self.character_rooms.values())
-        
-       
-        result=[]
+
+        resultat=[]
         if not self.inventory_rooms and self.character_rooms:
             return "piece vide"
         
-        result.append(f"Objets présents :\n{inventory_list}")
+        resultat.append(f"Objets présents :\n{inventory_list}")
         
-        result.append(f"Personnages présents :\n{characters_list}")
+        resultat.append(f"Personnages présents :\n{characters_list}")
         
-        return "\n\n".join(result)
+        return "\n\n".join(resultat)

@@ -15,47 +15,84 @@
 MSG0 = "\nLa commande '{command_word}' ne prend pas de paramètre.\n"
 # The MSG1 variable is used when the command takes 1 parameter.
 MSG1 = "\nLa commande '{command_word}' prend 1 seul paramètre.\n"
-from directions import centralise_direction
+
 from player import Player
 from room import Room
 from character import Character
+import random
 
 class Actions:
     def go(game, list_of_words, number_of_parameters):
         """
         Déplace le joueur dans la direction spécifiée.
         La direction peut être une direction cardinale ou une variante (ex: 'est').
-
         Args:
-            game (Game): L'objet du jeu.
-            list_of_words (list): La liste des mots de la commande.
-            number_of_parameters (int): Le nombre de paramètres attendu.
-
+        game (Game): L'objet du jeu.
+        list_of_words (list): La liste des mots de la commande.
+        number_of_parameters (int): Le nombre de paramètres attendu.
         Returns:
-            bool: True si la commande est exécutée avec succès, False sinon.
-        """
+        bool: True si la commande est exécutée avec succès, False sinon.
+    """
         # Vérifie que le bon nombre de paramètres est fourni
         l = len(list_of_words)
         if l != number_of_parameters + 1:
             command_word = list_of_words[0]
-            print(MSG1.format(command_word=command_word))
+            print(f"Erreur : Commande '{command_word}' mal formée.")
             return False
-
         # Récupère la direction et la standardise
         input_direction = list_of_words[1]
-        direction = centralise_direction(input_direction)
-
+        direction = game.centralise_direction(input_direction)
         if not direction:
             print(f"Direction '{input_direction}' inconnue.")
             return False
-
-        # Vérifie si une sortie existe dans cette direction
         player = game.player
-
-        # Déplace le joueur vers la pièce correspondante
-        player.move(direction)
-        #print(player.current_room.get_long_description())
+        current_room = player.current_room
+        # Vérifie si la sortie existe dans la direction spécifiée
+        if input_direction in current_room.exits:
+            exit_or_door = current_room.exits[input_direction]
+            # Si la sortie est un tuple (porte, salle)
+            if isinstance(exit_or_door, tuple):
+                next_room, door = exit_or_door  # Extraction de la salle et de la porte
+                # Si la porte est verrouillée
+                if door.is_locked():
+                    print(f"La porte {door.name} est verrouillée. Entrez le code pour l'ouvrir :")
+                    input_code = input("Code : ")
+                    # Vérification du code
+                    if door.unlock(input_code):
+                        print("La porte est maintenant déverrouillée.")
+                        player.move(input_direction)  # Déplace le joueur vers la salle suivante
+                        player.current_room = next_room
+                        print(player.current_room.get_long_description())
+                    else:
+                        print("Code incorrect. La porte reste verrouillée.")
+                        return False
+                else:
+                    # Si la porte n'est pas verrouillée
+                    player.move(input_direction)
+                    player.current_room = next_room
+                    print(player.current_room.get_long_description())
+                    if next_room.character_rooms:
+                        for character in next_room.character_rooms.values():
+                            print(f"({character.name}) est ici.")
+                            atak = input("Voulez-vous attaquer ce PNJ ? (oui/non): ")
+                            if atak == 'oui':
+                                player.attack(character)
+                            else:
+                                character.talk()
+            else:
+                # Si la sortie n'est pas un tuple (porte, salle), déplace simplement le joueur
+                player.move(input_direction)
+                print(player.current_room.get_long_description())
+            if player.current_room == game.victory_room:
+                print(f"Félicitations {player.name} ! Vous avez gagné.")
+                game.finished = True  # Fin du jeu
+        else:
+            print(f"Il n'y a pas de sortie dans la direction '{input_direction}'.")
+            return False
         return True
+
+
+
 
     def quit(game, list_of_words, number_of_parameters):
         """
@@ -179,6 +216,29 @@ class Actions:
         print(game.player.current_room.get_inventory())
        
         return True 
+    def attack(game, list_of_words,number_of_parameters):
+        l = len(list_of_words)
+        if l != number_of_parameters + 1:
+            command_word = list_of_words[0]
+            print(MSG0.format(command_word=command_word))
+            return False
+        player = game.player
+        current_room = player.current_room
+        character_name = list_of_words[1]
+        
+        atk = random.choice([True,False])
+        if character_name in player.current_room.character_rooms:
+            if atk==True :
+                current_room.character_rooms
+            
+            if player.pv == 1:
+                print(f"\n {player.name} vient de mourrir")
+                game.finished =True
+            else:
+                player.pv=player.pv - 1
+                game.finished = False
+                return True
+    
     def take(game, list_of_words, number_of_parameters):
         l = len(list_of_words)
         if l != number_of_parameters + 1:
@@ -226,8 +286,16 @@ class Actions:
             print(MSG1.format(command_word=command_word))
             return False
         player = game.player
-        character=list_of_words[1]
-        return True
+        current_room = player.current_room
+        character_name = list_of_words[1]
+        if character_name in player.current_room.character_rooms:
+            print(player.current_room.character_rooms[character_name].get_msg())
+            return True
+        else:
+            print(f"Il n'y a pas de personnage nommé {character_name} ici.")
+            return False
+
+        
 
     
 

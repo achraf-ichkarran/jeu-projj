@@ -7,11 +7,12 @@ from room import Room
 from player import Player
 from command import Command
 from actions import Actions
-from directions import (DIRECTIONS,centralise_direction)
 from item import Item
+from doors import Door
 
-def standardize_direction(input_direction):
-    return DIRECTIONS.get(input_direction, None)
+
+
+
 
 class Game:
 
@@ -21,8 +22,19 @@ class Game:
         self.rooms = []
         self.commands = {}
         self.player = None
-        
-        
+        self.victory_room=None
+        self.DIRECTIONS = {
+        "N": "N", "North": "N", "north": "N",
+        "E": "E", "Est": "E", "est": "E",
+        "S": "S", "Sud": "S", "sud": "S",
+        "O": "O", "Ouest": "O", "ouest": "O",
+        "U": "U", "Up": "U", "up": "U",
+        "D": "D", "Down": "D", "down": "D"
+        }  
+
+    def centralise_direction(self, input_direction):
+        return self.DIRECTIONS.get(input_direction, None)
+  
     
     # Setup the game
     def setup(self):
@@ -56,13 +68,15 @@ class Game:
         self.commands["prendre"] = prendre
         poser=Command("poser"," : poser un objet",Actions.drop,1)
         self.commands["poser"] = poser
+        parler=Command("parler"," : parler a un PNJ",Actions.talk,1)
+        self.commands["parler"] = parler
        
         # Setup items
         hache=Item("hache","une hache qui tranche ta mere","5")
         cle=Item("cle","une cle qui ouvre les portes","0.5")
         lampe=Item("lampe","une lampe qui fait de la lumiere","1")
         
-        
+        porte_1=Door("bureau","1234")
 
         # Setup rooms
 
@@ -88,17 +102,20 @@ class Game:
         bureau_abandonne.inventory_rooms.add(hache)
         souterrain_inonde.inventory_rooms.add(hache)
         
-        gandalf=Character("Gandalf", "un magicien blanc", corridor_infini, ["Abracadabra !","wsh mon gars","t'a du shit ?"])
+        gandalf=Character("Gandalf", "un magicien blanc",bureau_abandonne , ["Abracadabra !","wsh mon gars","t'a du shit ?"],5,can_move=False)
         
         corridor_infini.exits = {"E": bureau_abandonne}
         bureau_abandonne.exits = {"E": souterrain_inonde, "O": corridor_infini}
         souterrain_inonde.exits = {"S": chambre_rouge, "O": bureau_abandonne}
         chambre_rouge.exits = {"N": souterrain_inonde, "S": labyrinthe_de_portes}
-        labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": chambre_du_gardien}
-        chambre_du_gardien.exits = {"O": labyrinthe_de_portes}
+        labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": (chambre_du_gardien,porte_1)}
+        chambre_du_gardien.exits = {"O": labyrinthe_de_portes,}
 
         # Ajout de personnages aux salles
-        corridor_infini.character_rooms["Gandalf"] = gandalf
+        bureau_abandonne.character_rooms["Gandalf"] = gandalf
+        self.victory_room=chambre_du_gardien
+
+
 
         
 
@@ -129,6 +146,12 @@ class Game:
             # Get the command from the player 
             self.process_command(input("> "))
         return None
+    #def mort(self) :
+        pv=Player.pv
+        if self.pv == 0 :
+            print("vous etes mort")
+            self.finished =True
+        return None
 
     # Process the command entered by the player
     def process_command(self, command_string) -> None:
@@ -146,7 +169,7 @@ class Game:
             if len(list_of_words) < 2:
                 print("Vous devez préciser une direction après 'go'.")
                 return
-            direction = standardize_direction(list_of_words[1])
+            direction = self.centralise_direction(list_of_words[1])
             if not direction:
                 print(f"Direction '{list_of_words[1]}' non reconnue.")
                 return
