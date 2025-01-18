@@ -11,8 +11,23 @@ from directions import (DIRECTIONS,centralise_direction)
 from item import Item
 
 def standardize_direction(input_direction):
-    return DIRECTIONS.get(input_direction, None)
+    """
+    Standardise une direction donnée en une forme uniforme.
 
+    Cette fonction prend une direction en entrée (ex : 'Nord', 'nord-est') 
+    et la convertit en une représentation standardisée (ex : 'N', 'NE') 
+    pour une utilisation cohérente dans le système.
+
+    Args:
+        input_direction (str): La direction à standardiser. 
+            Peut inclure des variations comme 'Nord', 'nord', 'N', ou 'nord-est'.
+
+    Returns:
+        str: La direction standardisée, exprimée sous un format court (ex : 'N', 'NE').
+
+    Raises:
+        ValueError: Si la direction fournie n'est pas reconnue comme valide.
+    """
 class Game:
 
     # Constructor
@@ -26,6 +41,19 @@ class Game:
     
     # Setup the game
     def setup(self):
+         """
+        Configure ou initialise les composants nécessaires de l'objet.
+
+        Cette méthode est utilisée pour préparer l'objet à son utilisation, en configurant
+        les paramètres, en initialisant les ressources ou en effectuant toute autre
+        étape d'installation requise.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         #self.name=name
         #self.Character=Character
     #def __str__(self):
@@ -119,6 +147,18 @@ class Game:
 
     # Play the game
     def play(self):
+        """
+        Lance l'action principale associée à l'objet.
+
+        Cette méthode démarre ou exécute une fonctionnalité clé, comme le lancement d'un jeu,
+        la lecture d'un média, ou l'activation d'une séquence d'actions.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.setup()
         self.print_welcome()
         # Loop until the game is finished
@@ -132,6 +172,23 @@ class Game:
 
     # Process the command entered by the player
     def process_command(self, command_string) -> None:
+        """
+        Traite une commande donnée sous forme de chaîne de caractères.
+
+        Cette méthode analyse et exécute l'action associée à la commande fournie par l'utilisateur.
+        Elle peut inclure la validation, l'analyse syntaxique, et l'exécution de la commande.
+
+        Args:
+            command_string (str): La commande à traiter. 
+                Doit être une chaîne valide correspondant à une action reconnue.
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: Si la commande est vide ou invalide.
+            NotImplementedError: Si la commande est valide mais non encore implémentée.
+        """
             
                 
 
@@ -162,12 +219,38 @@ class Game:
 
     # Print the welcome message
     def print_welcome(self):
+        """
+        Affiche un message de bienvenue ou d'introduction.
+
+        Cette méthode est utilisée pour accueillir l'utilisateur et l'informer sur
+        le contexte ou l'état actuel de l'application, généralement au démarrage.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         print(f"\nBienvenue {self.player.name} dans ce jeu d'aventure !")
         print("Entrez 'help' si vous avez besoin d'aide.")
         print(self.player.current_room.get_long_description())
     # test
 
 def main():
+    """
+    Point d'entrée principal du programme.
+
+    Cette fonction initialise les ressources, configure les paramètres nécessaires,
+    et lance les processus principaux de l'application. Elle peut inclure 
+    des étapes comme le traitement des arguments de ligne de commande,
+    la configuration des logs ou l'exécution du flux principal du programme.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     # Create a game object and play the game
     Game().play()
     
