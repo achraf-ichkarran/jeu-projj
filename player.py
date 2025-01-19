@@ -47,6 +47,7 @@ class Player:
         # test
         if self.current_room and self.current_room.name not in self.history:
             self.history.append(self.current_room.name)
+        
       
         self.current_room = next_room
        

@@ -136,7 +136,8 @@ class Game:
          souterrain_inonde.exits = {"S": chambre_rouge, "O": bureau_abandonne}
          chambre_rouge.exits = {"N": souterrain_inonde, "S": labyrinthe_de_portes}
          labyrinthe_de_portes.exits = {"N": chambre_rouge, "E": (chambre_du_gardien,porte_1),"S":(piege,porte_2)}
-         chambre_du_gardien.exits = {"O": labyrinthe_de_portes,}
+         chambre_du_gardien.exits = {"__": corridor_infini}
+         piege.exits={"__":corridor_infini}
 
         # Ajout de personnages aux salles
          bureau_abandonne.character_rooms["vagabond"] = vagabond
